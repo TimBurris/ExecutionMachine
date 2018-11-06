@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ExecutionMachine.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:ExecutionMachine.Abstractions.IExecutionMachine">
+            <summary>
+            This machine is built to allow the caller to say what he wants to do (TaskProvider property) and then simply call Run over and over.
+            The Machine will use an executing and a pending task to ensure that the task is only run again if there is not another one queue up to run.
+            
+            This is for when you need to execute the EXACT same thing over and over (like refreshing some count).  If the refresh takes a few hundred milliseconds, the need to refresh could be call 100 times in that time frame.  they don't ALL need to refresh
+            Example:
+            A call to run is made, while the executing task is running, 30 more calls to run are made.
+            once the first run is complete, it only need to run once more, not 29 more... because they are all doing the exact same thing
+            </summary>
+            <remarks></remarks>
+        </member>
+        <member name="P:ExecutionMachine.Abstractions.IExecutionMachine.HasPendingTask">
+            <summary>
+            specifies whether or not there is currently a task pending execution 
+            </summary>
+            <remarks>can be used to help performance by not doing any work on your end if you know there's already a task that will run
+            Of course that would only make sense if ReplacePendingTaskOnRun is false
+            </remarks>
+        </member>
+        <member name="P:ExecutionMachine.Abstractions.IExecutionMachine.PendingTaskExecutionDelay">
+            <summary>
+            the amount of time (milliseconds) to delay between tasks (gives breathing room for the UI)
+            </summary>
+            <value></value>
+            <returns></returns>
+            <remarks>Default is 300 milliseconds</remarks>
+        </member>
+        <member name="P:ExecutionMachine.Abstractions.IExecutionMachine.ReplacePendingTaskOnRun">
+            <summary>
+            used to specifiy whether or not the existing pending task should be replaced when Run is called and there is already a pending task
+               This would be useful if the Lambda represented by TaskProvider has changed 
+            </summary>
+            <value></value>
+            <returns></returns>
+            <remarks>Default is false</remarks>
+        </member>
+        <member name="T:ExecutionMachine.Abstractions.IMachineDefferer">
+            <summary>
+            Used to hold off the execution machine until all activity stops.
+            A good example is type to search where you do not want to start searching until typing completely stops.  The normal machine would execute after X delay, even if the user is still typing
+            </summary>
+        </member>
+        <member name="P:ExecutionMachine.Abstractions.IMachineDefferer.DelayMilliseconds">
+            <summary>
+            The amout of time, in milliseconds, that must ellapse between <see cref="M:ExecutionMachine.Abstractions.IMachineDefferer.Input"/> before executing the <see cref="P:ExecutionMachine.Abstractions.IMachineDefferer.Machine"/>
+            </summary>
+            <value>Defaults to 300</value>
+        </member>
+        <member name="P:ExecutionMachine.Abstractions.IMachineDefferer.Machine">
+            <summary>
+            The <see cref="T:ExecutionMachine.Abstractions.IExecutionMachine"/> that should be run once no input has been received for <see cref="P:ExecutionMachine.Abstractions.IMachineDefferer.DelayMilliseconds"/>
+            </summary>
+        </member>
+        <member name="M:ExecutionMachine.Abstractions.IMachineDefferer.Input">
+            <summary>
+            informs that input has been recieved, meaning we should defer executing the <see cref="P:ExecutionMachine.Abstractions.IMachineDefferer.Machine"/> for <see cref="P:ExecutionMachine.Abstractions.IMachineDefferer.DelayMilliseconds"/>
+            </summary>
+        </member>
+    </members>
+</doc>

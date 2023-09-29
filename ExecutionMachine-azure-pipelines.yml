@@ -1,0 +1,38 @@
+
+parameters:
+  - name: VersionNumber
+    type: string 
+    default: '1.0.'
+    
+trigger: none
+
+name:  ${{ parameters.VersionNumber }}$(rev:.r)
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  packageVersion: ${{ parameters.VersionNumber }}
+
+steps:
+- task: DotNetCoreCLI@2
+  inputs:
+    command: pack
+    packagesToPack: '**/ExecutionMachin.Abstractions.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: packageVersion
+    outputDir: '$(Build.ArtifactStagingDirectory)'
+ 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: pack
+    packagesToPack: '**/ExecutionMachin.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: packageVersion
+    outputDir: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'

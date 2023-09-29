@@ -9,9 +9,17 @@
     <PackageProjectUrl>https://github.com/TimBurris/ExecutionMachine</PackageProjectUrl>
     <PackageTags>task;excecution;execute;defer;throttle;idle;search;delay</PackageTags>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExecutionMachine.Abstractions\ExecutionMachine.Abstractions.csproj" />
+    <ProjectReference Include="..\ExecutionMachine.Abstractions\ExecutionMachine.Abstractions.csproj"  PrivateAssets="all"/>
   </ItemGroup>
+
+  <Target Name="IncludeP2PAssets">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(OutputPath)ExecutionMachine.Abstractions.dll" />
+      <BuildOutputInPackage Include="$(OutputPath)ExecutionMachine.Abstractions.xml" />
+    </ItemGroup>
+  </Target>
 </Project>

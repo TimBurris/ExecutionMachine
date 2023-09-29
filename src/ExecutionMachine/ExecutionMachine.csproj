@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Tim Burris</Authors>
     <Description>A simple library used by applications that need to throttle repeated actions.</Description>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
 
     <PackageLicenseUrl>https://github.com/TimBurris/ExecutionMachine/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/TimBurris/ExecutionMachine</PackageProjectUrl>
@@ -15,11 +14,4 @@
   <ItemGroup>
     <ProjectReference Include="..\ExecutionMachine.Abstractions\ExecutionMachine.Abstractions.csproj" />
   </ItemGroup>
-
-  <Target Name="IncludeP2PAssets">
-    <ItemGroup>
-      <BuildOutputInPackage Include="$(OutputPath)ExecutionMachine.Abstractions.dll" />
-      <BuildOutputInPackage Include="$(OutputPath)ExecutionMachine.Abstractions.xml" />
-    </ItemGroup>
-  </Target>
 </Project>

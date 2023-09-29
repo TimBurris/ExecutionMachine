@@ -1,47 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ExecutionMachine.Abstractions;
 using System.Threading.Tasks;
 
 namespace ExecutionMachine
 {
-	public class MachineDefferer : Abstractions.IMachineDefferer
-	{
-		private Task _t;
-		private System.Threading.CancellationTokenSource _cts;
+    public class MachineDefferer : Abstractions.IMachineDefferer
+    {
+        private Task _t;
+        private System.Threading.CancellationTokenSource _cts;
 
-		public int DelayMilliseconds { get; set; } = 300;
+        public int DelayMilliseconds { get; set; } = 300;
 
-		public Abstractions.IMachine Machine { get; set; }
+        public IMachine Machine { get; set; }
 
-		public void Input()
-		{
-			if (_cts != null)
-				_cts.Cancel();
+        public void Input()
+        {
+            if (_cts != null)
+                _cts.Cancel();
 
-			_cts = new System.Threading.CancellationTokenSource();
-			_t = Task.Factory.StartNew(() => StartDelay(_cts.Token), _cts.Token);
-		}
+            _cts = new System.Threading.CancellationTokenSource();
+            _t = StartDelayAsync(_cts.Token);
+        }
 
-		private void StartDelay(System.Threading.CancellationToken cancellationToken)
-		{
-			/*try
+        //i've switched to Async await because I am having issues with the old school task pattern when used in blazor wasm
+        private async Task StartDelayAsync(System.Threading.CancellationToken cancellationToken)
+        {
+            await Task.Delay(this.DelayMilliseconds, cancellationToken);
+
+            if (cancellationToken.IsCancellationRequested)
             {
-                Task.Delay(this.DelayMilliseconds, cancellationToken)
-                    .Wait();
+                return;
             }
-            catch (TaskCanceledException) { }
-            catch (AggregateException) { }*/
-			Task.Delay(this.DelayMilliseconds)
-				  .Wait();
+            _t = null;
 
-			if (cancellationToken.IsCancellationRequested)
-				return;
-
-			_t = null;
-
-			this.Machine?.Run();
-		}
-	}
+            this.Machine?.Run();
+        }
+    }
 
 }

@@ -18,7 +18,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: pack
-    packagesToPack: '**/ExecutionMachin.Abstractions.csproj'
+    packagesToPack: '**/ExecutionMachine.Abstractions.csproj'
     versioningScheme: byEnvVar
     versionEnvVar: packageVersion
     outputDir: '$(Build.ArtifactStagingDirectory)'
@@ -26,7 +26,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: pack
-    packagesToPack: '**/ExecutionMachin.csproj'
+    packagesToPack: '**/ExecutionMachine.csproj'
     versioningScheme: byEnvVar
     versionEnvVar: packageVersion
     outputDir: '$(Build.ArtifactStagingDirectory)'
